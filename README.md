@@ -2,13 +2,13 @@
 市場連動型電気料金プラン追従の蓄電池スケジュール設定
 ==================
 
-## About sfmon
+## About btlooop
 Looopでんきのでんき予報より設定料金によりEchonetLightで蓄電池をスケジュール制御します。
 
-Looopでんき　でんき予報
+Looopでんき　でんき予報<br>
 https://looop-denki.com/home/denkiforecast/
 
-ECHONET Lite規格書　蓄電池・HEMSコントローラ間
+ECHONET Lite規格書　蓄電池・HEMSコントローラ間<br>
 https://echonet.jp/wp/wp-content/uploads/pdf/General/Standard/AIF/sb/sb_aif_ver1.30.pdf
 
 ## Usage
