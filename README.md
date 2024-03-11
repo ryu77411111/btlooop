@@ -50,6 +50,8 @@ Job 105 will be executed using /bin/sh
 
 </pre>
 
+![preview](preview.png)
+
 ------------------------------------------------
 ECHONET Lite　コマンド等
 <pre>
