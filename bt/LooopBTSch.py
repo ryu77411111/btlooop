@@ -25,8 +25,8 @@ TIME_LIST={
     '05:30': True,
     '06:00': True,
     '06:30': True,
-    '07:00': True,
-    '07:30': True,
+    '07:00': True, #Falseは売電優先
+    '07:30': True, #Falseは売電優先
     '08:00': True, #Falseは売電優先
     '08:30': True, #Falseは売電優先
     '09:00': True, #Falseは売電優先
@@ -105,13 +105,13 @@ def getwebprice():
         print(list(traceback.TracebackException.from_exception(e).format()), file=sys.stderr)
     return None
 
-def getlolist(price, limit):
+def getlolist(price, limit, length):
     lolist = []
     for key, val in list(price.items()):
         if TIME_LIST[key[:5]] and val < limit:
             lolist.append((key, val))
     lolist = sorted(lolist, key=lambda v:v[1])
-    return lolist
+    return lolist[:length]
 
 def gethilist(price, limit):
     hilist = []
@@ -126,9 +126,9 @@ def contain(hhmm, list):
             return True
     return False
 
-def makeplan(day, price, hilimit, lolimit, mode):
+def makeplan(day, price, hilimit, lolimit, length, mode):
     hilist = gethilist(price, hilimit)
-    lolist = getlolist(price, lolimit) if 0 < len(hilist) else []
+    lolist = getlolist(price, lolimit, length) if mode != 'sch' or 0 < len(hilist) else []
     #print(lolist, file=sys.stderr)
     #print(hilist, file=sys.stderr)
     prev = None
@@ -140,21 +140,22 @@ def makeplan(day, price, hilimit, lolimit, mode):
         else:
             cmd = '44' #待機
         # 変更のみ or すべて
-        if mode == 'chg' and prev == cmd:
+        if (mode == 'chg' or mode == 'sch') and prev == cmd:
             continue
         prev = cmd
         print(f'{key} {cmd} {val:.2f}')
 
 if __name__ == '__main__':
     args = sys.argv
-    if len(args) < 3:
-        print("usage: LooopBTSch.py hi_limit lo_limit [all|chg]", file=sys.stderr)
+    if len(args) < 4:
+        print("usage: LooopBTSch.py hi_limit lo_limit length [all|chg|sch]", file=sys.stderr)
         exit()
     day, price = getwebprice()
     if price is None:
         exit('1')
     hilimit = float(args[1])
     lolimit = float(args[2])
-    mode = 'chg' if len(args) < 4 else args[3]
-    makeplan(day, price, hilimit, lolimit, mode)
+    length = int(args[3])
+    mode = 'sch' if len(args) < 5 else args[4]
+    makeplan(day, price, hilimit, lolimit, length, mode)
 
